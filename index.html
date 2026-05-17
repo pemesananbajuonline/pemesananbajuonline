@@ -9321,6 +9321,13 @@ let pengaturanPublikSudahDimuat = false;
 let pengaturanPublikSedangDimuat = false;
 let pengaturanPublikGagalDimuat = false;
 
+/* Cache setting agar halaman terasa lebih cepat.
+   - Data terakhir dari admin disimpan di browser.
+   - Cache hanya dipakai sebentar supaya harga/note tidak terlalu lama tertinggal. */
+const PUBLIC_SETTINGS_CACHE_KEY = "pemesananBajuPublicSettingsCacheV2";
+const PUBLIC_SETTINGS_CACHE_TIME_KEY = "pemesananBajuPublicSettingsCacheTimeV2";
+const PUBLIC_SETTINGS_CACHE_MAX_AGE_MS = 2 * 60 * 1000; // 2 menit
+
 const PENDING_KIRIM_KEY = "pendingKirimOrders";
 let sedangMengirimKeSheet = false;
 
@@ -10766,6 +10773,8 @@ async function kirimKeSheet(){
 /* ===================================================== */
 
 const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzHfyjUeqc7i5N-TZJnHX7TohWFj7V_gyvar4oLqflSyGCvoQfcztBS-ohCjR5-U7xrgA/exec";
+const FIREBASE_DATABASE_URL = "https://pemesananbajuonline-e1e79-default-rtdb.asia-southeast1.firebasedatabase.app";
+const FIREBASE_SETTINGS_URL = FIREBASE_DATABASE_URL.replace(/\/$/, "") + "/settings.json";
 
 /* ===================================================== */
 /* =============== HARGA & TOTAL TRANSFER =============== */
@@ -11926,6 +11935,56 @@ function angkaPengaturan(value, fallback){
     return Number.isFinite(angka) && angka >= 0 ? angka : fallback;
 }
 
+function simpanCachePengaturanPublik(settings){
+    try{
+        if(!settings || typeof settings !== "object") return;
+        localStorage.setItem(PUBLIC_SETTINGS_CACHE_KEY, JSON.stringify(settings));
+        localStorage.setItem(PUBLIC_SETTINGS_CACHE_TIME_KEY, String(Date.now()));
+    }catch(error){
+        console.warn("Cache setting tidak bisa disimpan:", error);
+    }
+}
+
+function ambilCachePengaturanPublik(){
+    try{
+        const text = localStorage.getItem(PUBLIC_SETTINGS_CACHE_KEY);
+        const time = Number(localStorage.getItem(PUBLIC_SETTINGS_CACHE_TIME_KEY) || 0);
+
+        if(!text || !time) return null;
+
+        const umurCache = Date.now() - time;
+        if(umurCache > PUBLIC_SETTINGS_CACHE_MAX_AGE_MS) return null;
+
+        const parsed = JSON.parse(text);
+        if(!parsed || typeof parsed !== "object") return null;
+
+        return parsed;
+    }catch(error){
+        console.warn("Cache setting tidak bisa dibaca:", error);
+        return null;
+    }
+}
+
+function terapkanCachePengaturanPublikJikaAda(){
+    const cache = ambilCachePengaturanPublik();
+    if(!cache) return false;
+
+    terapkanPengaturanPublik(cache);
+
+    const statusBox = document.getElementById("networkStatus");
+    if(statusBox){
+        statusBox.classList.add("show");
+        statusBox.innerHTML = '<div class="offline-title">Memakai setting terakhir</div><div class="offline-message">Data tampil dari cache browser, lalu diperbarui otomatis dari server.</div>';
+        setTimeout(function(){
+            if(pengaturanPublikSudahDimuat && !pengaturanPublikGagalDimuat){
+                statusBox.classList.remove("show");
+            }
+        }, 2500);
+    }
+
+    return true;
+}
+
 function terapkanPengaturanPublik(settings){
     if(!settings || typeof settings !== "object") return;
 
@@ -11992,48 +12051,103 @@ function terapkanPengaturanPublik(settings){
     updateTombolKirim(false);
 }
 
+async function muatPengaturanPublikDariFirebase(){
+    if(!FIREBASE_SETTINGS_URL || FIREBASE_SETTINGS_URL.includes("PASTE_URL")){
+        throw new Error("URL Firebase Realtime Database belum diisi.");
+    }
+
+    const url = FIREBASE_SETTINGS_URL + "?t=" + Date.now();
+    const response = await fetch(url, {
+        method:"GET",
+        cache:"no-store"
+    });
+
+    if(!response.ok){
+        throw new Error("Firebase gagal merespons: HTTP " + response.status);
+    }
+
+    const settings = await response.json();
+
+    if(!settings || typeof settings !== "object"){
+        throw new Error("Data settings di Firebase masih kosong.");
+    }
+
+    return settings;
+}
+
 async function muatPengaturanPublikDariGAS(){
+    const sudahAdaSettingDariCache = pengaturanPublikSudahDimuat;
+
     pengaturanPublikSedangDimuat = true;
     pengaturanPublikGagalDimuat = false;
-    updateTombolKirim(false);
+
+    if(!sudahAdaSettingDariCache){
+        updateTombolKirim(false);
+    }
 
     try{
-        if(!GAS_WEB_APP_URL || GAS_WEB_APP_URL.includes("PASTE_URL")){
-            throw new Error("URL Web App Apps Script belum diisi di GAS_WEB_APP_URL.");
+        // Jalur utama: baca setting langsung dari Firebase Realtime Database.
+        // Ini lebih cepat untuk loading halaman karena tidak menunggu cold start Apps Script.
+        const settingsFirebase = await muatPengaturanPublikDariFirebase();
+        simpanCachePengaturanPublik(settingsFirebase);
+        terapkanPengaturanPublik(settingsFirebase);
+        return true;
+    }catch(errorFirebase){
+        console.warn("Setting Firebase belum bisa dimuat, mencoba fallback GAS:", errorFirebase);
+
+        try{
+            if(!GAS_WEB_APP_URL || GAS_WEB_APP_URL.includes("PASTE_URL")){
+                throw new Error("URL Web App Apps Script belum diisi di GAS_WEB_APP_URL.");
+            }
+
+            const body = new URLSearchParams();
+            body.append("action", "getPublicSettings");
+
+            const response = await fetch(GAS_WEB_APP_URL, {
+                method:"POST",
+                body:body
+            });
+
+            const text = await response.text();
+            const result = JSON.parse(text || "{}");
+
+            if(result.status === "success" && result.settings){
+                simpanCachePengaturanPublik(result.settings);
+                terapkanPengaturanPublik(result.settings);
+                return true;
+            }
+
+            throw new Error(result.message || "Pengaturan admin tidak tersedia.");
+        }catch(error){
+            console.warn("Pengaturan admin belum bisa dimuat:", error);
+
+            pengaturanPublikSedangDimuat = false;
+
+            if(pengaturanPublikSudahDimuat){
+                pengaturanPublikGagalDimuat = false;
+
+                const statusBox = document.getElementById("networkStatus");
+                if(statusBox){
+                    statusBox.classList.add("show");
+                    statusBox.innerHTML = '<div class="offline-title">Server belum merespons</div><div class="offline-message">Sementara memakai setting terakhir dari cache browser. Refresh halaman jika perlu.</div>';
+                }
+
+                updateTombolKirim(false);
+                return true;
+            }
+
+            pengaturanPublikSudahDimuat = false;
+            pengaturanPublikGagalDimuat = true;
+
+            const noteBox = document.getElementById("noteBox") || document.querySelector(".note-box");
+            if(noteBox){
+                noteBox.innerHTML = "Gagal memuat pengaturan dari admin. Silakan refresh halaman.";
+                noteBox.style.display = "block";
+            }
+
+            updateTombolKirim(false);
+            return false;
         }
-
-        const body = new URLSearchParams();
-        body.append("action", "getPublicSettings");
-
-        const response = await fetch(GAS_WEB_APP_URL, {
-            method:"POST",
-            body:body
-        });
-
-        const text = await response.text();
-        const result = JSON.parse(text || "{}");
-
-        if(result.status === "success" && result.settings){
-            terapkanPengaturanPublik(result.settings);
-            return true;
-        }
-
-        throw new Error(result.message || "Pengaturan admin tidak tersedia.");
-    }catch(error){
-        console.warn("Pengaturan admin belum bisa dimuat:", error);
-
-        pengaturanPublikSudahDimuat = false;
-        pengaturanPublikSedangDimuat = false;
-        pengaturanPublikGagalDimuat = true;
-
-        const noteBox = document.getElementById("noteBox") || document.querySelector(".note-box");
-        if(noteBox){
-            noteBox.innerHTML = "Gagal memuat pengaturan dari admin. Silakan refresh halaman.";
-            noteBox.style.display = "block";
-        }
-
-        updateTombolKirim(false);
-        return false;
     }
 }
 
@@ -12253,6 +12367,9 @@ document.addEventListener("visibilitychange", function(){
 pulihkanDraftForm();
 aktifkanAutosaveDraftForm();
 
+// Tampilkan cache setting lebih dulu agar halaman terasa cepat,
+// lalu ambil data terbaru dari GAS di belakang.
+terapkanCachePengaturanPublikJikaAda();
 muatPengaturanPublikDariGAS();
 
 updateTombolKirim(false);
