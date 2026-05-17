@@ -12036,13 +12036,17 @@ function terapkanPengaturanPublik(settings){
             batasWaktu = batasWaktuTanggal.getTime();
             pemesananDitutup = false;
             popupTutupSudahTampil = false;
-            tampilkanTanggalBatasPemesanan();
         }
     }
 
     pengaturanPublikSudahDimuat = true;
     pengaturanPublikSedangDimuat = false;
     pengaturanPublikGagalDimuat = false;
+
+    // Update ulang teks tanggal setelah status setting sudah dimuat.
+    // Ini memperbaiki kasus countdown angka sudah jalan, tetapi tulisan
+    // "Memuat batas pemesanan..." masih tertinggal sampai halaman di-refresh.
+    tampilkanTanggalBatasPemesanan();
 
     if(typeof render === "function"){
         render();
