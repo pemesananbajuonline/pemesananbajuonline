@@ -9303,6 +9303,26 @@ let data = JSON.parse(localStorage.getItem("orders")) || [];
 let sentData = JSON.parse(localStorage.getItem("sent")) || [];
 let lastSavedIndex = -1;
 
+
+/* ===================================================== */
+/* ========== PENGATURAN PUBLIK DARI ADMIN GAS ========= */
+/* ===================================================== */
+
+let APP_SETTINGS = {
+    noteText: "Jika ingin memesan lebih dari satu baju, klik “Tambah ke Daftar Pesanan” setiap kali selesai mengisi satu pesanan.\nSetelah semua pesanan sudah lengkap dan benar, klik “Kirim Pesanan”. Data pesanan akan tersimpan ke Google Spreadsheet.\nJika hanya memesan satu baju, Anda bisa langsung klik “Kirim Pesanan” tanpa perlu menambahkan ke daftar terlebih dahulu.",
+    deadline: "2026-11-30T23:59",
+    infoBaju: "O-neck/leher bulat • Cotton combed 30s • Hitam • Desain sesuai gambar",
+    hargaDewasa: 100000,
+    hargaAnak: 80000,
+    tambahanLenganPanjang: 15000,
+    waAdmin1: "6285240761698",
+    waAdmin2: "6282222222222",
+    waBuktiTf: "6285240761698",
+    bankName: "SeaBank",
+    rekeningNumber: "901668835931",
+    rekeningName: "I Komang Adi Wirawan"
+};
+
 const PENDING_KIRIM_KEY = "pendingKirimOrders";
 let sedangMengirimKeSheet = false;
 
@@ -9925,17 +9945,25 @@ document.addEventListener("click", function(e){
 /* ===================================================== */
 
 function hubungiWA1(){
-    window.open(
-        "https://wa.me/6285240761698",
-        "_blank"
-    );
+    const nomor = nomorWABersih(APP_SETTINGS.waAdmin1 || "");
+
+    if(!nomor){
+        alert("Nomor WhatsApp Admin 1 belum diisi.");
+        return;
+    }
+
+    window.open("https://wa.me/" + nomor, "_blank");
 }
 
 function hubungiWA2(){
-    window.open(
-        "https://wa.me/6282222222222",
-        "_blank"
-    );
+    const nomor = nomorWABersih(APP_SETTINGS.waAdmin2 || "");
+
+    if(!nomor){
+        alert("Nomor WhatsApp Admin 2 belum diisi.");
+        return;
+    }
+
+    window.open("https://wa.me/" + nomor, "_blank");
 }
 
 /* ===================================================== */
@@ -10728,9 +10756,9 @@ const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzHfyjUeqc7i5N-
 */
 /* ===================================================== */
 
-const HARGA_DEWASA = 100000;
-const HARGA_ANAK = 80000;
-const TAMBAHAN_LENGAN_PANJANG = 15000;
+let HARGA_DEWASA = 100000;
+let HARGA_ANAK = 80000;
+let TAMBAHAN_LENGAN_PANJANG = 15000;
 
 function formatRupiah(angka){
     return new Intl.NumberFormat("id-ID", {
@@ -10941,7 +10969,7 @@ function bagiBatchPesanan(listPesanan){
 }
 
 
-const NOMOR_WA_BUKTI_TF = "6285240761698";
+let NOMOR_WA_BUKTI_TF = "6285240761698";
 let dataBuktiTFTerakhir = null;
 
 function nomorWABersih(nomor){
@@ -11851,6 +11879,98 @@ window.onclick = function(e){
 };
 
 
+
+/* ===================================================== */
+/* ========== TERAPKAN PENGATURAN DARI ADMIN ============ */
+/* ===================================================== */
+
+function escapeHTML(teks){
+    return String(teks || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+function teksKeHTML(teks){
+    return escapeHTML(teks).replace(/\n/g, "<br>");
+}
+
+function angkaPengaturan(value, fallback){
+    const angka = Number(value);
+    return Number.isFinite(angka) && angka >= 0 ? angka : fallback;
+}
+
+function terapkanPengaturanPublik(settings){
+    if(!settings || typeof settings !== "object") return;
+
+    APP_SETTINGS = Object.assign({}, APP_SETTINGS, settings);
+
+    HARGA_DEWASA = angkaPengaturan(APP_SETTINGS.hargaDewasa, HARGA_DEWASA);
+    HARGA_ANAK = angkaPengaturan(APP_SETTINGS.hargaAnak, HARGA_ANAK);
+    TAMBAHAN_LENGAN_PANJANG = angkaPengaturan(APP_SETTINGS.tambahanLenganPanjang, TAMBAHAN_LENGAN_PANJANG);
+    NOMOR_WA_BUKTI_TF = nomorWABersih(APP_SETTINGS.waBuktiTf || NOMOR_WA_BUKTI_TF);
+
+    if(typeof INFO_REKENING !== "undefined"){
+        INFO_REKENING.bank = APP_SETTINGS.bankName || INFO_REKENING.bank;
+        INFO_REKENING.nomor = String(APP_SETTINGS.rekeningNumber || INFO_REKENING.nomor);
+        INFO_REKENING.atasNama = APP_SETTINGS.rekeningName || INFO_REKENING.atasNama;
+    }
+
+    const noteBox = document.querySelector(".note-box");
+    if(noteBox && APP_SETTINGS.noteText){
+        noteBox.innerHTML = teksKeHTML(APP_SETTINGS.noteText);
+    }
+
+    const infoLine = document.querySelector("#desainBajuPopup .design-info-panel .design-ultra-line:nth-child(1)");
+    if(infoLine){
+        infoLine.innerHTML = "<b>Info:</b> " + escapeHTML(APP_SETTINGS.infoBaju || "-");
+    }
+
+    const hargaLine = document.querySelector("#desainBajuPopup .design-info-panel .design-ultra-line:nth-child(2)");
+    if(hargaLine){
+        hargaLine.innerHTML = "<b>Harga:</b> Anak-anak " + formatRupiah(HARGA_ANAK) +
+            " • Dewasa " + formatRupiah(HARGA_DEWASA) +
+            " • Lengan panjang +" + formatRupiah(TAMBAHAN_LENGAN_PANJANG);
+    }
+
+    if(APP_SETTINGS.deadline){
+        const tanggalBaru = new Date(APP_SETTINGS.deadline);
+        if(!isNaN(tanggalBaru.getTime())){
+            batasWaktuTanggal = tanggalBaru;
+            batasWaktu = batasWaktuTanggal.getTime();
+            pemesananDitutup = false;
+            popupTutupSudahTampil = false;
+            tampilkanTanggalBatasPemesanan();
+            updateTombolKirim(false);
+        }
+    }
+}
+
+async function muatPengaturanPublikDariGAS(){
+    try{
+        if(!GAS_WEB_APP_URL || GAS_WEB_APP_URL.includes("PASTE_URL")) return;
+
+        const body = new URLSearchParams();
+        body.append("action", "getPublicSettings");
+
+        const response = await fetch(GAS_WEB_APP_URL, {
+            method:"POST",
+            body:body
+        });
+
+        const text = await response.text();
+        const result = JSON.parse(text || "{}");
+
+        if(result.status === "success" && result.settings){
+            terapkanPengaturanPublik(result.settings);
+        }
+    }catch(error){
+        console.warn("Pengaturan admin belum bisa dimuat:", error);
+    }
+}
+
 /* ===================================================== */
 /* ================= COUNTDOWN WAKTU ==================== */
 /* ===================================================== */
@@ -12025,6 +12145,8 @@ document.addEventListener("visibilitychange", function(){
 
 pulihkanDraftForm();
 aktifkanAutosaveDraftForm();
+
+muatPengaturanPublikDariGAS();
 
 updateTombolKirim(false);
 
