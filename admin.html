@@ -31,13 +31,20 @@
 </div></form></div><div class="actions-bottom"><button class="btn secondary" onclick="muatPengaturan()"><i class="fa-solid fa-rotate"></i> Muat Ulang</button><button id="saveBtn" class="btn green" onclick="document.getElementById('settingsForm').requestSubmit()"><i class="fa-solid fa-floppy-disk"></i> Simpan Pengaturan</button></div></div>
 <script>
 const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzHfyjUeqc7i5N-TZJnHX7TohWFj7V_gyvar4oLqflSyGCvoQfcztBS-ohCjR5-U7xrgA/exec";
+const FIREBASE_DATABASE_URL = "https://pemesananbajuonline-e1e79-default-rtdb.asia-southeast1.firebasedatabase.app";
+const FIREBASE_SETTINGS_URL = FIREBASE_DATABASE_URL.replace(/\/$/, "") + "/settings.json";
 const ADMIN_TOKEN_STORAGE_KEY = "adminToken";
+const PUBLIC_SETTINGS_CACHE_KEY = "pemesananBajuPublicSettingsCacheV2";
+const PUBLIC_SETTINGS_CACHE_TIME_KEY = "pemesananBajuPublicSettingsCacheTimeV2";
+function simpanCacheIndexDariAdmin(settings){try{if(!settings||typeof settings!=="object")return;localStorage.setItem(PUBLIC_SETTINGS_CACHE_KEY,JSON.stringify(settings));localStorage.setItem(PUBLIC_SETTINGS_CACHE_TIME_KEY,String(Date.now()));}catch(error){console.warn("Cache index tidak bisa diperbarui:",error);}}
 function statusBox(pesan, tipe){const box=document.getElementById('statusBox');box.className='status show '+(tipe||'info');box.textContent=pesan;}
 function adminToken(){return sessionStorage.getItem(ADMIN_TOKEN_STORAGE_KEY)||'';}
 function nomorBersih(nomor){return String(nomor||'').replace(/\D/g,'').replace(/^0/,'62');}
 function formatRupiah(angka){return new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',minimumFractionDigits:0}).format(Number(angka||0));}
 function escapeHTML(teks){return String(teks||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');}
 async function aksiGAS(action,data){const body=new URLSearchParams();body.append('action',action);Object.keys(data||{}).forEach(function(key){body.append(key,data[key]);});const response=await fetch(GAS_WEB_APP_URL,{method:'POST',body:body});const text=await response.text();return JSON.parse(text||'{}');}
+async function ambilSettingsDariFirebase(){const response=await fetch(FIREBASE_SETTINGS_URL+'?t='+Date.now(),{method:'GET',cache:'no-store'});if(!response.ok){throw new Error('Firebase gagal merespons: HTTP '+response.status);}const settings=await response.json();if(!settings||typeof settings!=='object'){throw new Error('Data settings di Firebase masih kosong.');}return settings;}
+async function simpanSettingsKeFirebase(settings){const response=await fetch(FIREBASE_SETTINGS_URL,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(settings||{})});if(!response.ok){throw new Error('Gagal menyimpan ke Firebase: HTTP '+response.status);}return await response.json();}
 function isiForm(settings){
     settings=settings||{};
     document.getElementById('noteText').value=settings.noteText||'';
@@ -169,6 +176,7 @@ async function uploadFotoDesain(tipe, opsi){
         throw new Error(result.message||'Upload foto desain gagal.');
     }
     isiForm(result.settings||{});
+    simpanCacheIndexDariAdmin(result.settings||{});
     input.value='';
     if(!opsi.silent) statusBox(result.message||'Foto desain berhasil diupload.','ok');
     return result;
@@ -185,8 +193,8 @@ document.getElementById('designFrontFile').addEventListener('change',function(){
 document.getElementById('designBackFile').addEventListener('change',function(){previewFileDesain('back');});
 
 async function cekSesi(){const token=adminToken();if(!token){document.getElementById('loginCover').classList.remove('hidden');return false;}try{const result=await aksiGAS('adminCheckSession',{adminToken:token});if(result.status!=='success'){document.getElementById('loginCover').classList.remove('hidden');return false;}return true;}catch(error){statusBox('Gagal cek sesi admin: '+error.message,'err');return false;}}
-async function muatPengaturan(){if(!(await cekSesi()))return;statusBox('Memuat pengaturan...','info');try{const result=await aksiGAS('getAdminSettings',{adminToken:adminToken()});if(result.status!=='success'){statusBox(result.message||'Gagal memuat pengaturan.','err');return;}isiForm(result.settings||{});statusBox('Pengaturan berhasil dimuat.','ok');}catch(error){statusBox('Gagal memuat pengaturan: '+error.message,'err');}}
-async function simpanPengaturan(event){event.preventDefault();if(!(await cekSesi()))return false;const saveBtn=document.getElementById('saveBtn');saveBtn.disabled=true;saveBtn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';try{await uploadFotoDesainTerpilih();const settings=ambilFormSettings();const result=await aksiGAS('updateAdminSettings',{adminToken:adminToken(),settings:JSON.stringify(settings)});if(result.status!=='success'){statusBox(result.message||'Gagal menyimpan pengaturan.','err');return false;}isiForm(result.settings||settings);statusBox('Pengaturan berhasil disimpan. Refresh index.html untuk melihat perubahan.','ok');}catch(error){statusBox('Gagal menyimpan pengaturan: '+error.message,'err');}finally{saveBtn.disabled=false;saveBtn.innerHTML='<i class="fa-solid fa-floppy-disk"></i> Simpan Pengaturan';}return false;}
+async function muatPengaturan(){if(!(await cekSesi()))return;statusBox('Memuat pengaturan dari Firebase...','info');try{const settingsFirebase=await ambilSettingsDariFirebase();isiForm(settingsFirebase||{});statusBox('Pengaturan berhasil dimuat cepat dari Firebase.','ok');return;}catch(errorFirebase){console.warn('Gagal memuat Firebase, fallback GAS:',errorFirebase);}try{const result=await aksiGAS('getAdminSettings',{adminToken:adminToken()});if(result.status!=='success'){statusBox(result.message||'Gagal memuat pengaturan.','err');return;}isiForm(result.settings||{});statusBox('Pengaturan berhasil dimuat dari GAS.','ok');}catch(error){statusBox('Gagal memuat pengaturan: '+error.message,'err');}}
+async function simpanPengaturan(event){event.preventDefault();if(!(await cekSesi()))return false;const saveBtn=document.getElementById('saveBtn');saveBtn.disabled=true;saveBtn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';try{await uploadFotoDesainTerpilih();const settings=ambilFormSettings();const result=await aksiGAS('updateAdminSettings',{adminToken:adminToken(),settings:JSON.stringify(settings)});if(result.status!=='success'){statusBox(result.message||'Gagal menyimpan pengaturan.','err');return false;}const settingsTerbaru=result.settings||settings;await simpanSettingsKeFirebase(settingsTerbaru);isiForm(settingsTerbaru);simpanCacheIndexDariAdmin(settingsTerbaru);statusBox('Pengaturan berhasil disimpan ke GAS dan Firebase. Index akan membaca data lebih cepat dari Firebase.','ok');}catch(error){statusBox('Gagal menyimpan pengaturan: '+error.message,'err');}finally{saveBtn.disabled=false;saveBtn.innerHTML='<i class="fa-solid fa-floppy-disk"></i> Simpan Pengaturan';}return false;}
 async function logoutAdmin(){try{await aksiGAS('adminLogout',{adminToken:adminToken()});}catch(error){}sessionStorage.removeItem(ADMIN_TOKEN_STORAGE_KEY);location.href='index.html';}
 muatPengaturan();
 </script>
