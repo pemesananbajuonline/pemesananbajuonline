@@ -7,17 +7,23 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
 :root{--blue:#1976D2;--green:#16a34a;--red:#dc2626;--text:#0f172a;--muted:#64748b;--border:#dbe3ef;--white:#fff;--shadow:0 16px 38px rgba(15,23,42,.12)}
-*{box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}body{margin:0;background:linear-gradient(180deg,#f8fbff,#eef4fb);color:var(--text);padding:20px}.wrap{max-width:980px;margin:auto;background:var(--white);border-radius:22px;box-shadow:var(--shadow);overflow:hidden}.header{background:linear-gradient(135deg,#0D6EFD,#1976D2);color:white;padding:22px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}.header h1{margin:0;font-size:26px;line-height:1.1}.header p{margin:6px 0 0;color:rgba(255,255,255,.88);font-weight:700}.header-actions{display:flex;gap:10px;flex-wrap:wrap}.btn{border:0;border-radius:12px;padding:12px 15px;font-weight:900;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--blue);color:white}.btn.secondary{background:white;color:#14365f}.btn.danger{background:var(--red);color:white}.btn.green{background:var(--green);color:white}.btn:disabled{opacity:.65;cursor:not-allowed}.content{padding:20px}.status{display:none;margin-bottom:16px;padding:13px 14px;border-radius:14px;font-weight:800;line-height:1.45}.status.show{display:block}.status.ok{background:#dcfce7;color:#166534;border:1px solid #86efac}.status.err{background:#fee2e2;color:#991b1b;border:1px solid #fecaca}.status.info{background:#eff6ff;color:#1e3a8a;border:1px solid #bfdbfe}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.card{border:1.5px solid var(--border);border-radius:18px;padding:16px;background:#fff}.card.full{grid-column:1 / -1}.card h2{margin:0 0 12px;font-size:18px;color:#14365f;display:flex;gap:8px;align-items:center}.field{margin-bottom:12px}label{display:block;font-weight:900;margin-bottom:6px;color:#334155}input,textarea{width:100%;border:1.5px solid var(--border);border-radius:12px;padding:12px;font-size:15px;outline:none;background:white;color:var(--text)}textarea{min-height:116px;resize:vertical;line-height:1.45}input:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(25,118,210,.10)}.help{font-size:12px;color:var(--muted);font-weight:700;margin-top:5px;line-height:1.35}.actions-bottom{position:sticky;bottom:0;background:rgba(255,255,255,.94);backdrop-filter:blur(8px);border-top:1px solid var(--border);padding:14px 20px;display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}.login-cover{position:fixed;inset:0;background:linear-gradient(180deg,#f8fbff,#eef4fb);display:flex;align-items:center;justify-content:center;padding:18px;z-index:10}.login-box{width:100%;max-width:380px;background:white;border-radius:22px;box-shadow:var(--shadow);padding:24px;text-align:center}.login-icon{width:64px;height:64px;border-radius:18px;margin:0 auto 12px;background:linear-gradient(135deg,#1976D2,#0D6EFD);color:white;display:flex;align-items:center;justify-content:center;font-size:34px}.login-box h2{margin:0 0 8px;color:#14365f}.login-box p{margin:0 0 18px;color:var(--muted);font-weight:700;line-height:1.45}.hidden{display:none!important}.preview{background:#f8fbff;border:1px dashed #bfdbfe;border-radius:14px;padding:12px;line-height:1.5;color:#334155}
-@media(max-width:760px){body{padding:0}.wrap{border-radius:0;min-height:100vh}.grid{grid-template-columns:1fr}.header h1{font-size:21px}.content{padding:14px}.actions-bottom{justify-content:stretch}.actions-bottom .btn{width:100%}}
+*{box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}body{margin:0;background:linear-gradient(180deg,#f8fbff,#eef4fb);color:var(--text);padding:20px}.wrap{max-width:980px;margin:auto;background:var(--white);border-radius:22px;box-shadow:var(--shadow);overflow:hidden}.header{background:linear-gradient(135deg,#0D6EFD,#1976D2);color:white;padding:22px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}.header h1{margin:0;font-size:26px;line-height:1.1}.header p{margin:6px 0 0;color:rgba(255,255,255,.88);font-weight:700}.header-actions{display:flex;gap:10px;flex-wrap:wrap}.btn{border:0;border-radius:12px;padding:12px 15px;font-weight:900;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--blue);color:white}.btn.secondary{background:white;color:#14365f}.btn.danger{background:var(--red);color:white}.btn.green{background:var(--green);color:white}.btn:disabled{opacity:.65;cursor:not-allowed}.content{padding:20px}.status{display:none;margin-bottom:16px;padding:13px 14px;border-radius:14px;font-weight:800;line-height:1.45}.status.show{display:block}.status.ok{background:#dcfce7;color:#166534;border:1px solid #86efac}.status.err{background:#fee2e2;color:#991b1b;border:1px solid #fecaca}.status.info{background:#eff6ff;color:#1e3a8a;border:1px solid #bfdbfe}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.card{border:1.5px solid var(--border);border-radius:18px;padding:16px;background:#fff}.card.full{grid-column:1 / -1}.card h2{margin:0 0 12px;font-size:18px;color:#14365f;display:flex;gap:8px;align-items:center}.field{margin-bottom:12px}label{display:block;font-weight:900;margin-bottom:6px;color:#334155}input,textarea{width:100%;border:1.5px solid var(--border);border-radius:12px;padding:12px;font-size:15px;outline:none;background:white;color:var(--text)}textarea{min-height:116px;resize:vertical;line-height:1.45}input:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(25,118,210,.10)}.help{font-size:12px;color:var(--muted);font-weight:700;margin-top:5px;line-height:1.35}.actions-bottom{position:sticky;bottom:0;background:rgba(255,255,255,.94);backdrop-filter:blur(8px);border-top:1px solid var(--border);padding:14px 20px;display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}.login-cover{position:fixed;inset:0;background:linear-gradient(180deg,#f8fbff,#eef4fb);display:flex;align-items:center;justify-content:center;padding:18px;z-index:10}.login-box{width:100%;max-width:380px;background:white;border-radius:22px;box-shadow:var(--shadow);padding:24px;text-align:center}.login-icon{width:64px;height:64px;border-radius:18px;margin:0 auto 12px;background:linear-gradient(135deg,#1976D2,#0D6EFD);color:white;display:flex;align-items:center;justify-content:center;font-size:34px}.login-box h2{margin:0 0 8px;color:#14365f}.login-box p{margin:0 0 18px;color:var(--muted);font-weight:700;line-height:1.45}.hidden{display:none!important}.preview{background:#f8fbff;border:1px dashed #bfdbfe;border-radius:14px;padding:12px;line-height:1.5;color:#334155}.upload-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.upload-card{border:1.5px solid var(--border);border-radius:16px;padding:12px;background:#f8fbff}.upload-card h3{margin:0 0 10px;font-size:15px;color:#14365f;display:flex;align-items:center;gap:7px}.design-preview{width:100%;height:220px;object-fit:contain;background:white;border:1px solid #e2e8f0;border-radius:14px;padding:8px;margin-bottom:10px}.file-note{font-size:12px;color:#475569;font-weight:800;line-height:1.35;margin-top:8px;word-break:break-all}.upload-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}.upload-actions .btn{padding:10px 12px;font-size:13px}.highlight-preview{color:#d32f2f;font-weight:900}
+@media(max-width:760px){body{padding:0}.wrap{border-radius:0;min-height:100vh}.grid,.upload-grid{grid-template-columns:1fr}.header h1{font-size:21px}.content{padding:14px}.actions-bottom{justify-content:stretch}.actions-bottom .btn{width:100%}.design-preview{height:190px}}
 </style>
 </head>
 <body>
 <div id="loginCover" class="login-cover hidden"><div class="login-box"><div class="login-icon"><i class="fa-solid fa-shirt"></i></div><h2>Login Admin</h2><p>Sesi admin belum aktif. Kembali ke halaman utama lalu klik ikon baju untuk login.</p><button class="btn" onclick="location.href='index.html'"><i class="fa-solid fa-arrow-left"></i> Kembali ke Login</button></div></div>
-<div class="wrap"><div class="header"><div><h1><i class="fa-solid fa-gear"></i> Admin Pemesanan Baju</h1><p>Edit note, batas pemesanan, harga, nomor WA, dan rekening.</p></div><div class="header-actions"><button class="btn secondary" onclick="location.href='index.html'"><i class="fa-solid fa-house"></i> Index</button><button class="btn danger" onclick="logoutAdmin()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button></div></div>
+<div class="wrap"><div class="header"><div><h1><i class="fa-solid fa-gear"></i> Admin Pemesanan Baju</h1><p>Edit note, batas pemesanan, harga, nomor WA, rekening, dan foto desain.</p></div><div class="header-actions"><button class="btn secondary" onclick="location.href='index.html'"><i class="fa-solid fa-house"></i> Index</button><button class="btn danger" onclick="logoutAdmin()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button></div></div>
 <div class="content"><div id="statusBox" class="status info show">Memuat pengaturan...</div><form id="settingsForm" onsubmit="return simpanPengaturan(event)"><div class="grid">
-<section class="card full"><h2><i class="fa-solid fa-note-sticky"></i> Note di Halaman Utama</h2><div class="field"><label for="noteText">Isi note</label><textarea id="noteText" placeholder="Tulis informasi yang tampil di kotak PENTING"></textarea><div class="help">Enter akan ditampilkan sebagai baris baru di halaman index.</div></div></section>
+<section class="card full"><h2><i class="fa-solid fa-note-sticky"></i> Note di Halaman Utama</h2><div class="field"><label for="noteText">Isi note</label><textarea id="noteText" placeholder="Tulis informasi yang tampil di kotak PENTING"></textarea><div class="help">Enter akan ditampilkan sebagai baris baru. Untuk teks merah/tebal gunakan format [highlight]teks[/highlight].</div></div></section>
 <section class="card"><h2><i class="fa-regular fa-clock"></i> Batas Pemesanan</h2><div class="field"><label for="deadline">Tanggal dan jam berakhir</label><input id="deadline" type="datetime-local"><div class="help">Saat waktu ini lewat, tombol kirim di index akan menjadi “Pemesanan Ditutup”.</div></div></section>
 <section class="card"><h2><i class="fa-solid fa-shirt"></i> Info Baju</h2><div class="field"><label for="infoBaju">Info bahan/desain</label><textarea id="infoBaju" placeholder="Contoh: O-neck/leher bulat • Cotton combed 30s • Hitam"></textarea></div></section>
+<section class="card full"><h2><i class="fa-solid fa-images"></i> Foto Desain Baju</h2>
+<input id="designFrontUrl" type="hidden"><input id="designBackUrl" type="hidden"><input id="designFrontFileId" type="hidden"><input id="designBackFileId" type="hidden"><input id="designFrontName" type="hidden"><input id="designBackName" type="hidden">
+<div class="upload-grid">
+<div class="upload-card"><h3><i class="fa-solid fa-shirt"></i> Desain Depan</h3><img id="previewDesignFront" class="design-preview" src="desain-depan.webp" alt="Preview desain depan"><input id="designFrontFile" type="file" accept="image/png,image/jpeg,image/webp"><div id="designFrontInfo" class="file-note">Belum ada file baru dipilih.</div><div class="upload-actions"><button type="button" class="btn" onclick="uploadFotoDesain('front')"><i class="fa-solid fa-cloud-arrow-up"></i> Upload Depan</button></div></div>
+<div class="upload-card"><h3><i class="fa-solid fa-shirt"></i> Desain Belakang</h3><img id="previewDesignBack" class="design-preview" src="desain-belakang.webp" alt="Preview desain belakang"><input id="designBackFile" type="file" accept="image/png,image/jpeg,image/webp"><div id="designBackInfo" class="file-note">Belum ada file baru dipilih.</div><div class="upload-actions"><button type="button" class="btn" onclick="uploadFotoDesain('back')"><i class="fa-solid fa-cloud-arrow-up"></i> Upload Belakang</button></div></div>
+</div><div class="help">Bisa upload JPG, PNG, atau WEBP. Foto akan dikompres otomatis sebelum dikirim ke Google Apps Script, lalu disimpan di Google Drive folder <b>Pemesanan_Baju_Desain_Upload</b>.</div></section>
 <section class="card"><h2><i class="fa-solid fa-tags"></i> Harga Baju</h2><div class="field"><label for="hargaAnak">Harga Anak-Anak</label><input id="hargaAnak" type="number" min="0" step="1000"></div><div class="field"><label for="hargaDewasa">Harga Dewasa</label><input id="hargaDewasa" type="number" min="0" step="1000"></div><div class="field"><label for="tambahanLenganPanjang">Tambahan Lengan Panjang</label><input id="tambahanLenganPanjang" type="number" min="0" step="1000"></div></section>
 <section class="card"><h2><i class="fa-brands fa-whatsapp"></i> Nomor WhatsApp Admin</h2><div class="field"><label for="waAdmin1">WA Admin 1 - Butuh Bantuan</label><input id="waAdmin1" type="tel" placeholder="628xxxxxxxxxx"></div><div class="field"><label for="waAdmin2">WA Admin 2 - Butuh Bantuan</label><input id="waAdmin2" type="tel" placeholder="628xxxxxxxxxx"></div><div class="field"><label for="waBuktiTf">WA Kirim Bukti TF</label><input id="waBuktiTf" type="tel" placeholder="628xxxxxxxxxx"></div><div class="help">Gunakan format 62, contoh 6281234567890. Boleh isi 08..., nanti otomatis dibersihkan.</div></section>
 <section class="card"><h2><i class="fa-solid fa-building-columns"></i> Rekening Transfer</h2><div class="field"><label for="bankName">Nama Bank</label><input id="bankName" type="text" placeholder="SeaBank / BCA / BRI"></div><div class="field"><label for="rekeningNumber">Nomor Rekening</label><input id="rekeningNumber" type="tel" placeholder="Nomor rekening"></div><div class="field"><label for="rekeningName">Atas Nama</label><input id="rekeningName" type="text" placeholder="Nama pemilik rekening"></div></section>
@@ -32,13 +38,155 @@ function nomorBersih(nomor){return String(nomor||'').replace(/\D/g,'').replace(/
 function formatRupiah(angka){return new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',minimumFractionDigits:0}).format(Number(angka||0));}
 function escapeHTML(teks){return String(teks||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');}
 async function aksiGAS(action,data){const body=new URLSearchParams();body.append('action',action);Object.keys(data||{}).forEach(function(key){body.append(key,data[key]);});const response=await fetch(GAS_WEB_APP_URL,{method:'POST',body:body});const text=await response.text();return JSON.parse(text||'{}');}
-function isiForm(settings){document.getElementById('noteText').value=settings.noteText||'';document.getElementById('deadline').value=String(settings.deadline||'').slice(0,16);document.getElementById('infoBaju').value=settings.infoBaju||'';document.getElementById('hargaAnak').value=settings.hargaAnak||0;document.getElementById('hargaDewasa').value=settings.hargaDewasa||0;document.getElementById('tambahanLenganPanjang').value=settings.tambahanLenganPanjang||0;document.getElementById('waAdmin1').value=settings.waAdmin1||'';document.getElementById('waAdmin2').value=settings.waAdmin2||'';document.getElementById('waBuktiTf').value=settings.waBuktiTf||'';document.getElementById('bankName').value=settings.bankName||'';document.getElementById('rekeningNumber').value=settings.rekeningNumber||'';document.getElementById('rekeningName').value=settings.rekeningName||'';updatePreview();}
-function ambilFormSettings(){return{noteText:document.getElementById('noteText').value.trim(),deadline:document.getElementById('deadline').value,infoBaju:document.getElementById('infoBaju').value.trim(),hargaAnak:Number(document.getElementById('hargaAnak').value||0),hargaDewasa:Number(document.getElementById('hargaDewasa').value||0),tambahanLenganPanjang:Number(document.getElementById('tambahanLenganPanjang').value||0),waAdmin1:nomorBersih(document.getElementById('waAdmin1').value),waAdmin2:nomorBersih(document.getElementById('waAdmin2').value),waBuktiTf:nomorBersih(document.getElementById('waBuktiTf').value),bankName:document.getElementById('bankName').value.trim(),rekeningNumber:document.getElementById('rekeningNumber').value.replace(/\D/g,''),rekeningName:document.getElementById('rekeningName').value.trim()};}
-function updatePreview(){const s=ambilFormSettings();document.getElementById('previewBox').innerHTML='<b>Note:</b><br>'+escapeHTML(s.noteText||'-').replace(/\n/g,'<br>')+'<hr>'+'<b>Batas:</b> '+escapeHTML(s.deadline||'-')+'<br>'+'<b>Info:</b> '+escapeHTML(s.infoBaju||'-')+'<br>'+'<b>Harga:</b> Anak-anak '+formatRupiah(s.hargaAnak)+' • Dewasa '+formatRupiah(s.hargaDewasa)+' • Lengan panjang +'+formatRupiah(s.tambahanLenganPanjang)+'<br>'+'<b>WA:</b> Admin 1 '+escapeHTML(s.waAdmin1||'-')+' • Admin 2 '+escapeHTML(s.waAdmin2||'-')+' • Bukti TF '+escapeHTML(s.waBuktiTf||'-')+'<br>'+'<b>Rekening:</b> '+escapeHTML(s.bankName||'-')+' / '+escapeHTML(s.rekeningNumber||'-')+' / '+escapeHTML(s.rekeningName||'-');}
+function isiForm(settings){
+    settings=settings||{};
+    document.getElementById('noteText').value=settings.noteText||'';
+    document.getElementById('deadline').value=String(settings.deadline||'').slice(0,16);
+    document.getElementById('infoBaju').value=settings.infoBaju||'';
+    document.getElementById('hargaAnak').value=settings.hargaAnak||0;
+    document.getElementById('hargaDewasa').value=settings.hargaDewasa||0;
+    document.getElementById('tambahanLenganPanjang').value=settings.tambahanLenganPanjang||0;
+    document.getElementById('waAdmin1').value=settings.waAdmin1||'';
+    document.getElementById('waAdmin2').value=settings.waAdmin2||'';
+    document.getElementById('waBuktiTf').value=settings.waBuktiTf||'';
+    document.getElementById('bankName').value=settings.bankName||'';
+    document.getElementById('rekeningNumber').value=settings.rekeningNumber||'';
+    document.getElementById('rekeningName').value=settings.rekeningName||'';
+    document.getElementById('designFrontUrl').value=settings.designFrontUrl||'desain-depan.webp';
+    document.getElementById('designBackUrl').value=settings.designBackUrl||'desain-belakang.webp';
+    document.getElementById('designFrontFileId').value=settings.designFrontFileId||'';
+    document.getElementById('designBackFileId').value=settings.designBackFileId||'';
+    document.getElementById('designFrontName').value=settings.designFrontName||'desain-depan.webp';
+    document.getElementById('designBackName').value=settings.designBackName||'desain-belakang.webp';
+    document.getElementById('previewDesignFront').src=document.getElementById('designFrontUrl').value||'desain-depan.webp';
+    document.getElementById('previewDesignBack').src=document.getElementById('designBackUrl').value||'desain-belakang.webp';
+    document.getElementById('designFrontInfo').textContent='Aktif: '+(document.getElementById('designFrontName').value||document.getElementById('designFrontUrl').value||'-');
+    document.getElementById('designBackInfo').textContent='Aktif: '+(document.getElementById('designBackName').value||document.getElementById('designBackUrl').value||'-');
+    updatePreview();
+}
+function ambilFormSettings(){return{
+    noteText:document.getElementById('noteText').value.trim(),
+    deadline:document.getElementById('deadline').value,
+    infoBaju:document.getElementById('infoBaju').value.trim(),
+    hargaAnak:Number(document.getElementById('hargaAnak').value||0),
+    hargaDewasa:Number(document.getElementById('hargaDewasa').value||0),
+    tambahanLenganPanjang:Number(document.getElementById('tambahanLenganPanjang').value||0),
+    waAdmin1:nomorBersih(document.getElementById('waAdmin1').value),
+    waAdmin2:nomorBersih(document.getElementById('waAdmin2').value),
+    waBuktiTf:nomorBersih(document.getElementById('waBuktiTf').value),
+    bankName:document.getElementById('bankName').value.trim(),
+    rekeningNumber:document.getElementById('rekeningNumber').value.replace(/\D/g,''),
+    rekeningName:document.getElementById('rekeningName').value.trim(),
+    designFrontUrl:document.getElementById('designFrontUrl').value.trim(),
+    designBackUrl:document.getElementById('designBackUrl').value.trim(),
+    designFrontFileId:document.getElementById('designFrontFileId').value.trim(),
+    designBackFileId:document.getElementById('designBackFileId').value.trim(),
+    designFrontName:document.getElementById('designFrontName').value.trim(),
+    designBackName:document.getElementById('designBackName').value.trim()
+};}
+function teksKeHTMLPreview(teks){return escapeHTML(teks).replace(/\[highlight\]([\s\S]*?)\[\/highlight\]/gi,'<span style="color:#d32f2f;font-weight:900">$1</span>').replace(/\[merah\]([\s\S]*?)\[\/merah\]/gi,'<span style="color:#d32f2f;font-weight:900">$1</span>').replace(/\n/g,'<br>');}
+function updatePreview(){const s=ambilFormSettings();document.getElementById('previewBox').innerHTML='<b>Note:</b><br>'+teksKeHTMLPreview(s.noteText||'-')+'<hr>'+'<b>Batas:</b> '+escapeHTML(s.deadline||'-')+'<br>'+'<b>Info:</b> '+escapeHTML(s.infoBaju||'-')+'<br>'+'<b>Harga:</b> Anak-anak '+formatRupiah(s.hargaAnak)+' • Dewasa '+formatRupiah(s.hargaDewasa)+' • Lengan panjang +'+formatRupiah(s.tambahanLenganPanjang)+'<br>'+'<b>WA:</b> Admin 1 '+escapeHTML(s.waAdmin1||'-')+' • Admin 2 '+escapeHTML(s.waAdmin2||'-')+' • Bukti TF '+escapeHTML(s.waBuktiTf||'-')+'<br>'+'<b>Rekening:</b> '+escapeHTML(s.bankName||'-')+' / '+escapeHTML(s.rekeningNumber||'-')+' / '+escapeHTML(s.rekeningName||'-')+'<br>'+'<b>Foto desain:</b> Depan '+escapeHTML(s.designFrontName||s.designFrontUrl||'-')+' • Belakang '+escapeHTML(s.designBackName||s.designBackUrl||'-');}
 document.querySelectorAll('input, textarea').forEach(function(el){el.addEventListener('input',updatePreview);});
+
+function bacaFileSebagaiGambar(file){
+    return new Promise(function(resolve,reject){
+        const reader=new FileReader();
+        reader.onload=function(){resolve(reader.result);};
+        reader.onerror=function(){reject(new Error('Gagal membaca file.'));};
+        reader.readAsDataURL(file);
+    });
+}
+
+function kompresFoto(file){
+    return new Promise(function(resolve,reject){
+        if(!file){reject(new Error('File kosong.'));return;}
+        if(!/^image\/(jpeg|jpg|png|webp)$/i.test(file.type||'')){
+            reject(new Error('Format foto harus JPG, PNG, atau WEBP.'));
+            return;
+        }
+        const reader=new FileReader();
+        reader.onload=function(){
+            const img=new Image();
+            img.onload=function(){
+                const maxSide=1400;
+                let w=img.width;
+                let h=img.height;
+                if(w>h && w>maxSide){h=Math.round(h*maxSide/w);w=maxSide;}
+                if(h>=w && h>maxSide){w=Math.round(w*maxSide/h);h=maxSide;}
+                const canvas=document.createElement('canvas');
+                canvas.width=w;
+                canvas.height=h;
+                const ctx=canvas.getContext('2d');
+                ctx.drawImage(img,0,0,w,h);
+                const mime=(file.type==='image/png' || file.type==='image/webp') ? file.type : 'image/jpeg';
+                const dataUrl=canvas.toDataURL(mime,0.86);
+                resolve({
+                    dataUrl:dataUrl,
+                    base64:dataUrl.split(',')[1]||'',
+                    mimeType:mime,
+                    fileName:file.name||'desain-baju.jpg'
+                });
+            };
+            img.onerror=function(){reject(new Error('File gambar tidak bisa dibaca.'));};
+            img.src=reader.result;
+        };
+        reader.onerror=function(){reject(new Error('Gagal membaca file gambar.'));};
+        reader.readAsDataURL(file);
+    });
+}
+
+function previewFileDesain(tipe){
+    const input=document.getElementById(tipe==='front'?'designFrontFile':'designBackFile');
+    const preview=document.getElementById(tipe==='front'?'previewDesignFront':'previewDesignBack');
+    const info=document.getElementById(tipe==='front'?'designFrontInfo':'designBackInfo');
+    const file=input && input.files ? input.files[0] : null;
+    if(!file) return;
+    bacaFileSebagaiGambar(file).then(function(dataUrl){
+        preview.src=dataUrl;
+        info.textContent='File dipilih: '+file.name+' ('+Math.round(file.size/1024)+' KB). Klik Simpan Pengaturan atau tombol Upload.';
+    }).catch(function(error){statusBox(error.message,'err');});
+}
+
+async function uploadFotoDesain(tipe, opsi){
+    opsi=opsi||{};
+    if(!(await cekSesi()))return null;
+    const input=document.getElementById(tipe==='front'?'designFrontFile':'designBackFile');
+    const file=input && input.files ? input.files[0] : null;
+    if(!file){
+        if(!opsi.silent) statusBox('Pilih foto desain '+(tipe==='front'?'depan':'belakang')+' terlebih dahulu.','err');
+        return null;
+    }
+    if(!opsi.silent) statusBox('Mengompres dan mengupload foto desain '+(tipe==='front'?'depan':'belakang')+'...','info');
+    const hasilKompres=await kompresFoto(file);
+    const result=await aksiGAS('uploadDesignImage',{
+        adminToken:adminToken(),
+        imageType:tipe,
+        fileName:hasilKompres.fileName,
+        mimeType:hasilKompres.mimeType,
+        base64Data:hasilKompres.base64
+    });
+    if(result.status!=='success'){
+        throw new Error(result.message||'Upload foto desain gagal.');
+    }
+    isiForm(result.settings||{});
+    input.value='';
+    if(!opsi.silent) statusBox(result.message||'Foto desain berhasil diupload.','ok');
+    return result;
+}
+
+async function uploadFotoDesainTerpilih(){
+    const front=document.getElementById('designFrontFile').files[0];
+    const back=document.getElementById('designBackFile').files[0];
+    if(front){await uploadFotoDesain('front',{silent:true});}
+    if(back){await uploadFotoDesain('back',{silent:true});}
+}
+
+document.getElementById('designFrontFile').addEventListener('change',function(){previewFileDesain('front');});
+document.getElementById('designBackFile').addEventListener('change',function(){previewFileDesain('back');});
+
 async function cekSesi(){const token=adminToken();if(!token){document.getElementById('loginCover').classList.remove('hidden');return false;}try{const result=await aksiGAS('adminCheckSession',{adminToken:token});if(result.status!=='success'){document.getElementById('loginCover').classList.remove('hidden');return false;}return true;}catch(error){statusBox('Gagal cek sesi admin: '+error.message,'err');return false;}}
 async function muatPengaturan(){if(!(await cekSesi()))return;statusBox('Memuat pengaturan...','info');try{const result=await aksiGAS('getAdminSettings',{adminToken:adminToken()});if(result.status!=='success'){statusBox(result.message||'Gagal memuat pengaturan.','err');return;}isiForm(result.settings||{});statusBox('Pengaturan berhasil dimuat.','ok');}catch(error){statusBox('Gagal memuat pengaturan: '+error.message,'err');}}
-async function simpanPengaturan(event){event.preventDefault();if(!(await cekSesi()))return false;const saveBtn=document.getElementById('saveBtn');saveBtn.disabled=true;saveBtn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';try{const settings=ambilFormSettings();const result=await aksiGAS('updateAdminSettings',{adminToken:adminToken(),settings:JSON.stringify(settings)});if(result.status!=='success'){statusBox(result.message||'Gagal menyimpan pengaturan.','err');return false;}isiForm(result.settings||settings);statusBox('Pengaturan berhasil disimpan. Refresh index.html untuk melihat perubahan.','ok');}catch(error){statusBox('Gagal menyimpan pengaturan: '+error.message,'err');}finally{saveBtn.disabled=false;saveBtn.innerHTML='<i class="fa-solid fa-floppy-disk"></i> Simpan Pengaturan';}return false;}
+async function simpanPengaturan(event){event.preventDefault();if(!(await cekSesi()))return false;const saveBtn=document.getElementById('saveBtn');saveBtn.disabled=true;saveBtn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';try{await uploadFotoDesainTerpilih();const settings=ambilFormSettings();const result=await aksiGAS('updateAdminSettings',{adminToken:adminToken(),settings:JSON.stringify(settings)});if(result.status!=='success'){statusBox(result.message||'Gagal menyimpan pengaturan.','err');return false;}isiForm(result.settings||settings);statusBox('Pengaturan berhasil disimpan. Refresh index.html untuk melihat perubahan.','ok');}catch(error){statusBox('Gagal menyimpan pengaturan: '+error.message,'err');}finally{saveBtn.disabled=false;saveBtn.innerHTML='<i class="fa-solid fa-floppy-disk"></i> Simpan Pengaturan';}return false;}
 async function logoutAdmin(){try{await aksiGAS('adminLogout',{adminToken:adminToken()});}catch(error){}sessionStorage.removeItem(ADMIN_TOKEN_STORAGE_KEY);location.href='index.html';}
 muatPengaturan();
 </script>
