@@ -24,7 +24,7 @@
 <section class="card full"><h2><i class="fa-solid fa-eye"></i> Preview Singkat</h2><div id="previewBox" class="preview">Preview akan muncul setelah pengaturan dimuat.</div></section>
 </div></form></div><div class="actions-bottom"><button class="btn secondary" onclick="muatPengaturan()"><i class="fa-solid fa-rotate"></i> Muat Ulang</button><button id="saveBtn" class="btn green" onclick="document.getElementById('settingsForm').requestSubmit()"><i class="fa-solid fa-floppy-disk"></i> Simpan Pengaturan</button></div></div>
 <script>
-const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxOgwT4Zn7QK8DQy4dGDjJGa-lXCYj1NhPcPmRqxtEAFSJ5FeT5Wbm3lwPAoJ0hw6v6/exec";
+const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzHfyjUeqc7i5N-TZJnHX7TohWFj7V_gyvar4oLqflSyGCvoQfcztBS-ohCjR5-U7xrgA/exec";
 const ADMIN_TOKEN_STORAGE_KEY = "adminToken";
 function statusBox(pesan, tipe){const box=document.getElementById('statusBox');box.className='status show '+(tipe||'info');box.textContent=pesan;}
 function adminToken(){return sessionStorage.getItem(ADMIN_TOKEN_STORAGE_KEY)||'';}
