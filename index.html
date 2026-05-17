@@ -8907,17 +8907,7 @@ button.btn.btn-send.btn-send-big:active{
 <!-- ================= NOTE BOX ========================== -->
 <!-- ===================================================== -->
 
-<div class="note-box">
-    Jika ingin memesan lebih dari satu baju, klik
-    <span class="note-highlight">“Tambah ke Daftar Pesanan”</span>
-    setiap kali selesai mengisi satu pesanan.<br>
-    Setelah semua pesanan sudah lengkap dan benar, klik
-    <span class="note-highlight">“Kirim Pesanan”</span>.
-    Data pesanan akan tersimpan ke Google Spreadsheet.<br>
-    Jika hanya memesan satu baju, Anda bisa langsung klik
-    <span class="note-highlight">“Kirim Pesanan”</span>
-    tanpa perlu menambahkan ke daftar terlebih dahulu.
-</div>
+<div class="note-box" id="noteBox" style="display:none;"></div>
 
 <!-- ===================================================== -->
 <!-- ================= COUNTDOWN ========================= -->
@@ -9260,21 +9250,21 @@ button.btn.btn-send.btn-send-big:active{
         <div class="design-split-grid">
             <div class="design-side-card">
                 <div class="design-side-title">Desain Depan</div>
-                <img src="desain-depan.webp" class="design-side-image" id="desainBajuDepanImage" alt="Desain Baju Depan">
+                <img src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20700%20450%27%3E%3Crect%20width%3D%27700%27%20height%3D%27450%27%20fill%3D%27%23f8fbff%27/%3E%3Ctext%20x%3D%27350%27%20y%3D%27225%27%20text-anchor%3D%27middle%27%20font-family%3D%27Arial%27%20font-size%3D%2730%27%20font-weight%3D%27900%27%20fill%3D%27%2314365f%27%3EMemuat%20desain...%3C/text%3E%3C/svg%3E" class="design-side-image" id="desainBajuDepanImage" alt="Desain Baju Depan">
             </div>
 
             <div class="design-side-card">
                 <div class="design-side-title">Desain Belakang</div>
-                <img src="desain-belakang.webp" class="design-side-image" id="desainBajuBelakangImage" alt="Desain Baju Belakang">
+                <img src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20700%20450%27%3E%3Crect%20width%3D%27700%27%20height%3D%27450%27%20fill%3D%27%23f8fbff%27/%3E%3Ctext%20x%3D%27350%27%20y%3D%27225%27%20text-anchor%3D%27middle%27%20font-family%3D%27Arial%27%20font-size%3D%2730%27%20font-weight%3D%27900%27%20fill%3D%27%2314365f%27%3EMemuat%20desain...%3C/text%3E%3C/svg%3E" class="design-side-image" id="desainBajuBelakangImage" alt="Desain Baju Belakang">
             </div>
         </div>
 
         <div class="design-info-panel ultra-compact-info">
             <div class="design-ultra-line">
-                <b>Info:</b> O-neck/leher bulat • Cotton combed 30s • Hitam • Desain sesuai gambar
+                <b>Info:</b> Memuat info dari admin...
             </div>
             <div class="design-ultra-line">
-                <b>Harga:</b> Anak-anak Rp80rb • Dewasa Rp100rb • Lengan panjang +Rp15rb
+                <b>Harga:</b> Memuat harga dari admin...
             </div>
             <div class="design-ultra-note">
                 Warna bisa sedikit berbeda tergantung layar HP.
@@ -9309,23 +9299,27 @@ let lastSavedIndex = -1;
 /* ===================================================== */
 
 let APP_SETTINGS = {
-    noteText: "Jika ingin memesan lebih dari satu baju, klik “Tambah ke Daftar Pesanan” setiap kali selesai mengisi satu pesanan.\nSetelah semua pesanan sudah lengkap dan benar, klik “Kirim Pesanan”. Data pesanan akan tersimpan ke Google Spreadsheet.\nJika hanya memesan satu baju, Anda bisa langsung klik “Kirim Pesanan” tanpa perlu menambahkan ke daftar terlebih dahulu.",
-    deadline: "2026-11-30T23:59",
-    infoBaju: "O-neck/leher bulat • Cotton combed 30s • Hitam • Desain sesuai gambar",
-    hargaDewasa: 100000,
-    hargaAnak: 80000,
-    tambahanLenganPanjang: 15000,
-    waAdmin1: "6285240761698",
-    waAdmin2: "6282222222222",
-    waBuktiTf: "6285240761698",
-    bankName: "SeaBank",
-    rekeningNumber: "901668835931",
-    rekeningName: "I Komang Adi Wirawan",
-    designFrontUrl: "desain-depan.webp",
-    designBackUrl: "desain-belakang.webp",
-    designFrontName: "desain-depan.webp",
-    designBackName: "desain-belakang.webp"
+    noteText: "",
+    deadline: "",
+    infoBaju: "",
+    hargaDewasa: 0,
+    hargaAnak: 0,
+    tambahanLenganPanjang: 0,
+    waAdmin1: "",
+    waAdmin2: "",
+    waBuktiTf: "",
+    bankName: "",
+    rekeningNumber: "",
+    rekeningName: "",
+    designFrontUrl: "",
+    designBackUrl: "",
+    designFrontName: "",
+    designBackName: ""
 };
+
+let pengaturanPublikSudahDimuat = false;
+let pengaturanPublikSedangDimuat = false;
+let pengaturanPublikGagalDimuat = false;
 
 const PENDING_KIRIM_KEY = "pendingKirimOrders";
 let sedangMengirimKeSheet = false;
@@ -10498,11 +10492,32 @@ function isDuplicate(newData){
     );
 }
 
+function pengaturanSiapAtauTampilkanPopup(){
+    if(pengaturanPublikSudahDimuat) return true;
+
+    if(pengaturanPublikGagalDimuat){
+        showAlert(
+            "Pengaturan dari admin gagal dimuat.<br><br>Silakan refresh halaman. Jika masih gagal, cek koneksi internet dan URL GAS_WEB_APP_URL.",
+            "⚠️"
+        );
+    }else{
+        showAlert(
+            "Pengaturan dari admin masih dimuat.<br><br>Tunggu sebentar lalu coba lagi.",
+            "⏳"
+        );
+    }
+
+    updateTombolKirim(false);
+    return false;
+}
+
 /* ===================================================== */
 /* ================= SIMPAN KE BROWSER ================== */
 /* ===================================================== */
 
 async function simpan(){
+    if(!pengaturanSiapAtauTampilkanPopup()) return;
+
     let form = ambilForm();
 
     if(!form) return;
@@ -10573,6 +10588,8 @@ async function hapus(i){
 /* ===================================================== */
 
 async function kirimKeSheet(){
+
+    if(!pengaturanSiapAtauTampilkanPopup()) return;
 
     if(sedangMengirimKeSheet){
         await showAlert(
@@ -10760,9 +10777,9 @@ const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzHfyjUeqc7i5N-
 */
 /* ===================================================== */
 
-let HARGA_DEWASA = 100000;
-let HARGA_ANAK = 80000;
-let TAMBAHAN_LENGAN_PANJANG = 15000;
+let HARGA_DEWASA = 0;
+let HARGA_ANAK = 0;
+let TAMBAHAN_LENGAN_PANJANG = 0;
 
 function formatRupiah(angka){
     return new Intl.NumberFormat("id-ID", {
@@ -10973,7 +10990,7 @@ function bagiBatchPesanan(listPesanan){
 }
 
 
-let NOMOR_WA_BUKTI_TF = "6285240761698";
+let NOMOR_WA_BUKTI_TF = "";
 let dataBuktiTFTerakhir = null;
 
 function nomorWABersih(nomor){
@@ -11358,9 +11375,9 @@ function showSuccess(message){
 /* ===================================================== */
 
 const INFO_REKENING = {
-    bank:"SeaBank",
-    nomor:"901668835931",
-    atasNama:"I Komang Adi Wirawan"
+    bank:"",
+    nomor:"",
+    atasNama:""
 };
 
 function showRekeningTransfer(listPesanan, opsi = {}){
@@ -11912,22 +11929,23 @@ function angkaPengaturan(value, fallback){
 function terapkanPengaturanPublik(settings){
     if(!settings || typeof settings !== "object") return;
 
-    APP_SETTINGS = Object.assign({}, APP_SETTINGS, settings);
+    APP_SETTINGS = Object.assign({}, settings);
 
-    HARGA_DEWASA = angkaPengaturan(APP_SETTINGS.hargaDewasa, HARGA_DEWASA);
-    HARGA_ANAK = angkaPengaturan(APP_SETTINGS.hargaAnak, HARGA_ANAK);
-    TAMBAHAN_LENGAN_PANJANG = angkaPengaturan(APP_SETTINGS.tambahanLenganPanjang, TAMBAHAN_LENGAN_PANJANG);
-    NOMOR_WA_BUKTI_TF = nomorWABersih(APP_SETTINGS.waBuktiTf || NOMOR_WA_BUKTI_TF);
+    HARGA_DEWASA = angkaPengaturan(APP_SETTINGS.hargaDewasa, 0);
+    HARGA_ANAK = angkaPengaturan(APP_SETTINGS.hargaAnak, 0);
+    TAMBAHAN_LENGAN_PANJANG = angkaPengaturan(APP_SETTINGS.tambahanLenganPanjang, 0);
+    NOMOR_WA_BUKTI_TF = nomorWABersih(APP_SETTINGS.waBuktiTf || "");
 
     if(typeof INFO_REKENING !== "undefined"){
-        INFO_REKENING.bank = APP_SETTINGS.bankName || INFO_REKENING.bank;
-        INFO_REKENING.nomor = String(APP_SETTINGS.rekeningNumber || INFO_REKENING.nomor);
-        INFO_REKENING.atasNama = APP_SETTINGS.rekeningName || INFO_REKENING.atasNama;
+        INFO_REKENING.bank = String(APP_SETTINGS.bankName || "");
+        INFO_REKENING.nomor = String(APP_SETTINGS.rekeningNumber || "");
+        INFO_REKENING.atasNama = String(APP_SETTINGS.rekeningName || "");
     }
 
-    const noteBox = document.querySelector(".note-box");
-    if(noteBox && APP_SETTINGS.noteText){
-        noteBox.innerHTML = teksKeHTML(APP_SETTINGS.noteText);
+    const noteBox = document.getElementById("noteBox") || document.querySelector(".note-box");
+    if(noteBox){
+        noteBox.innerHTML = teksKeHTML(APP_SETTINGS.noteText || "");
+        noteBox.style.display = APP_SETTINGS.noteText ? "block" : "none";
     }
 
     const desainDepanImage = document.getElementById("desainBajuDepanImage");
@@ -11960,14 +11978,29 @@ function terapkanPengaturanPublik(settings){
             pemesananDitutup = false;
             popupTutupSudahTampil = false;
             tampilkanTanggalBatasPemesanan();
-            updateTombolKirim(false);
         }
     }
+
+    pengaturanPublikSudahDimuat = true;
+    pengaturanPublikSedangDimuat = false;
+    pengaturanPublikGagalDimuat = false;
+
+    if(typeof render === "function"){
+        render();
+    }
+
+    updateTombolKirim(false);
 }
 
 async function muatPengaturanPublikDariGAS(){
+    pengaturanPublikSedangDimuat = true;
+    pengaturanPublikGagalDimuat = false;
+    updateTombolKirim(false);
+
     try{
-        if(!GAS_WEB_APP_URL || GAS_WEB_APP_URL.includes("PASTE_URL")) return;
+        if(!GAS_WEB_APP_URL || GAS_WEB_APP_URL.includes("PASTE_URL")){
+            throw new Error("URL Web App Apps Script belum diisi di GAS_WEB_APP_URL.");
+        }
 
         const body = new URLSearchParams();
         body.append("action", "getPublicSettings");
@@ -11982,9 +12015,25 @@ async function muatPengaturanPublikDariGAS(){
 
         if(result.status === "success" && result.settings){
             terapkanPengaturanPublik(result.settings);
+            return true;
         }
+
+        throw new Error(result.message || "Pengaturan admin tidak tersedia.");
     }catch(error){
         console.warn("Pengaturan admin belum bisa dimuat:", error);
+
+        pengaturanPublikSudahDimuat = false;
+        pengaturanPublikSedangDimuat = false;
+        pengaturanPublikGagalDimuat = true;
+
+        const noteBox = document.getElementById("noteBox") || document.querySelector(".note-box");
+        if(noteBox){
+            noteBox.innerHTML = "Gagal memuat pengaturan dari admin. Silakan refresh halaman.";
+            noteBox.style.display = "block";
+        }
+
+        updateTombolKirim(false);
+        return false;
     }
 }
 
@@ -12020,13 +12069,18 @@ async function muatPengaturanPublikDariGAS(){
     karena 12 akan terbaca sebagai Januari tahun berikutnya.
 */
 
-let batasWaktuTanggal = new Date(2026, 10, 30, 23, 59, 59);
+let batasWaktuTanggal = new Date();
 let batasWaktu = batasWaktuTanggal.getTime();
 
 function tampilkanTanggalBatasPemesanan(){
     let tanggalBox = document.getElementById("countdownEndDate");
 
     if(!tanggalBox) return;
+
+    if(!pengaturanPublikSudahDimuat){
+        tanggalBox.innerHTML = "Memuat batas pemesanan...";
+        return;
+    }
 
     let bulan = [
         "Jan", "Feb", "Mar", "Apr", "Mei", "Jun",
@@ -12043,6 +12097,20 @@ function tampilkanTanggalBatasPemesanan(){
 tampilkanTanggalBatasPemesanan();
 
 setInterval(function(){
+    if(!pengaturanPublikSudahDimuat){
+        document.getElementById("hari").innerHTML = "-";
+        document.getElementById("jam").innerHTML = "-";
+        document.getElementById("menit").innerHTML = "-";
+        document.getElementById("detik").innerHTML = "-";
+
+        const title = document.querySelector(".countdown-title");
+        if(title){
+            title.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i><span>Memuat Batas Pemesanan</span>';
+        }
+
+        return;
+    }
+
     let sekarang = new Date().getTime();
     let selisih = batasWaktu - sekarang;
 
@@ -12061,6 +12129,11 @@ setInterval(function(){
 
     return;
 	}
+
+    const title = document.querySelector(".countdown-title");
+    if(title){
+        title.innerHTML = '<i class="fa-regular fa-clock"></i><span>Batas Pemesanan</span>';
+    }
 
     let hari = Math.floor(selisih / (1000 * 60 * 60 * 24));
     let jam = Math.floor((selisih % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -12085,6 +12158,23 @@ function updateTombolKirim(tampilkanPopup = false){
 
     tombolKirim.classList.remove("offline");
     tombolKirim.classList.remove("closed");
+
+    if(!pengaturanPublikSudahDimuat){
+        tombolKirim.disabled = true;
+        tombolKirim.classList.add(pengaturanPublikGagalDimuat ? "offline" : "closed");
+        tombolKirim.innerHTML = pengaturanPublikGagalDimuat
+            ? '<i class="fa-solid fa-triangle-exclamation"></i> Gagal Memuat Setting'
+            : '<i class="fa-solid fa-spinner fa-spin"></i> Memuat Setting...';
+
+        if(statusBox && pengaturanPublikGagalDimuat){
+            statusBox.classList.add("show");
+            statusBox.innerHTML = '<div class="offline-title">Setting belum termuat</div><div class="offline-message">Refresh halaman atau cek koneksi dan URL Google Apps Script.</div>';
+        }else if(statusBox){
+            statusBox.classList.remove("show");
+        }
+
+        return;
+    }
 
     if(pemesananDitutup){
         tombolKirim.disabled = true;
