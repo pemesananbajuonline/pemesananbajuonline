@@ -9246,8 +9246,8 @@ button.btn.btn-send.btn-send-big:active{
         <!-- 
             GAMBAR DESAIN BAJU DEPAN & BELAKANG
 
-            Pastikan file desain-depan.webp dan desain-belakang.webp berada
-            1 folder dengan file index.html.
+            Foto desain bisa diatur dari admin.html. Jika belum upload dari admin,
+            sistem memakai file desain-depan.webp dan desain-belakang.webp di folder yang sama.
 
             Susunan file yang disarankan:
             - index.html
@@ -9320,7 +9320,11 @@ let APP_SETTINGS = {
     waBuktiTf: "6285240761698",
     bankName: "SeaBank",
     rekeningNumber: "901668835931",
-    rekeningName: "I Komang Adi Wirawan"
+    rekeningName: "I Komang Adi Wirawan",
+    designFrontUrl: "desain-depan.webp",
+    designBackUrl: "desain-belakang.webp",
+    designFrontName: "desain-depan.webp",
+    designBackName: "desain-belakang.webp"
 };
 
 const PENDING_KIRIM_KEY = "pendingKirimOrders";
@@ -11894,7 +11898,10 @@ function escapeHTML(teks){
 }
 
 function teksKeHTML(teks){
-    return escapeHTML(teks).replace(/\n/g, "<br>");
+    return escapeHTML(teks)
+        .replace(/\[highlight\]([\s\S]*?)\[\/highlight\]/gi, '<span class="note-highlight">$1</span>')
+        .replace(/\[merah\]([\s\S]*?)\[\/merah\]/gi, '<span class="note-highlight">$1</span>')
+        .replace(/\n/g, "<br>");
 }
 
 function angkaPengaturan(value, fallback){
@@ -11921,6 +11928,16 @@ function terapkanPengaturanPublik(settings){
     const noteBox = document.querySelector(".note-box");
     if(noteBox && APP_SETTINGS.noteText){
         noteBox.innerHTML = teksKeHTML(APP_SETTINGS.noteText);
+    }
+
+    const desainDepanImage = document.getElementById("desainBajuDepanImage");
+    if(desainDepanImage && APP_SETTINGS.designFrontUrl){
+        desainDepanImage.src = APP_SETTINGS.designFrontUrl;
+    }
+
+    const desainBelakangImage = document.getElementById("desainBajuBelakangImage");
+    if(desainBelakangImage && APP_SETTINGS.designBackUrl){
+        desainBelakangImage.src = APP_SETTINGS.designBackUrl;
     }
 
     const infoLine = document.querySelector("#desainBajuPopup .design-info-panel .design-ultra-line:nth-child(1)");
