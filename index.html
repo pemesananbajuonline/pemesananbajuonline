@@ -8839,6 +8839,144 @@ button.btn.btn-send.btn-send-big:active{
     }
 }
 
+
+
+/* =====================================================
+   REVISI FINAL - BORDER SEDIKIT LEBIH JELAS & SEIMBANG
+   - Mengikuti versi border terakhir.
+   - Note dan warning offline tidak diubah warnanya.
+   - Tidak mengubah struktur HTML atau fungsi JavaScript.
+   ===================================================== */
+
+/* Card utama kategori */
+.data-pemesan-card,
+.size-card.compact-ui-card,
+.choice-card,
+.gender-card{
+    border-width:1.65px!important;
+    border-color:#c9d3e1!important;
+    box-shadow:0 5px 14px rgba(15,23,42,.05)!important;
+}
+
+/* Input di Data Pemesan dan input Size Lainnya */
+.data-pemesan-card .pemesan-field input,
+#sizeLainnya{
+    border-width:1.5px!important;
+    border-color:#cfd8e6!important;
+}
+
+/* Tombol pilihan size, lengan, umur, gender */
+.radio-group label,
+.size-card .size-options label,
+.choice-card-options label,
+.gender-options label{
+    border-width:1.7px!important;
+    border-color:#c4cfdd!important;
+}
+
+.radio-group label:hover,
+.size-card .size-options label:hover,
+.choice-card-options label:hover,
+.gender-options label:hover{
+    border-color:#8cbfff!important;
+}
+
+/* Batas Pemesanan dan Note: hanya diseimbangkan ketebalan bordernya */
+.countdown-box,
+.note-box{
+    border-width:1.65px!important;
+}
+
+/* Border pemisah angka countdown ikut dibuat sedikit lebih jelas */
+.count-item:not(:last-child)::after{
+    width:1.2px!important;
+}
+
+/* Bagian summary/payment/rekening mengikuti ketegasan border yang sama */
+.summary-confirm,
+.payment-box,
+.rekening-box{
+    border-width:1.55px!important;
+}
+
+.summary-card,
+.rekening-detail-card{
+    border-width:1.35px!important;
+}
+
+@media(max-width:768px){
+    .data-pemesan-card,
+    .size-card.compact-ui-card,
+    .choice-card,
+    .gender-card{
+        border-width:1.55px!important;
+        border-color:#c9d3e1!important;
+    }
+
+    .radio-group label,
+    .size-card .size-options label,
+    .choice-card-options label,
+    .gender-options label{
+        border-width:1.55px!important;
+        border-color:#c4cfdd!important;
+    }
+
+    .countdown-box,
+    .note-box{
+        border-width:1.55px!important;
+    }
+
+    .count-item:not(:last-child)::after{
+        width:1.1px!important;
+    }
+}
+
+
+
+/* =====================================================
+   FINAL REQUEST - BORDER NOTE & BATAS PEMESANAN LEBIH JELAS
+   - Note tetap memakai warna aslinya.
+   - Warning offline tidak disentuh.
+   ===================================================== */
+.countdown-box{
+    border-width:2px!important;
+    border-style:solid!important;
+    border-color:#c4cfdd!important;
+    box-shadow:0 6px 16px rgba(15,23,42,.055)!important;
+}
+
+.note-box{
+    border-width:2px!important;
+    border-style:solid!important;
+    box-shadow:0 6px 16px rgba(255,193,7,.13)!important;
+}
+
+.count-item:not(:last-child)::after{
+    width:1.4px!important;
+    background:#c9d3e1!important;
+}
+
+@media(max-width:768px){
+    .countdown-box,
+    .note-box{
+        border-width:1.9px!important;
+    }
+
+    .count-item:not(:last-child)::after{
+        width:1.3px!important;
+    }
+}
+
+@media(max-width:390px){
+    .countdown-box,
+    .note-box{
+        border-width:1.8px!important;
+    }
+
+    .count-item:not(:last-child)::after{
+        width:1.2px!important;
+    }
+}
 </style>
 
 
